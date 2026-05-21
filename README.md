@@ -96,6 +96,10 @@ Junction table resolving the Many-to-Many relationship between jobs and skills.
 
 ---
 
+## Current Active APIs
+
+![Swagger Docs](./docs/API.png)
+
 ## ⚙️ Getting Started
 
 ### Prerequisites

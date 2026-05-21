@@ -1,6 +1,9 @@
 from sqlalchemy import Select
 from app.models import JobListing
 
+from sqlalchemy import delete
+from sqlalchemy.exc import NoResultFound
+
 class JobListingService():
     
     def __init__(self, user):
@@ -22,4 +25,13 @@ class JobListingService():
 
 
     async def delete_job(self, id, db):
-        pass
+        stmt = delete(JobListing).where(
+            JobListing.id == id,
+            JobListing.user_id == self.user.id
+        )
+
+        result = await db.execute(stmt)
+        await db.commit()
+
+        # result.rowcount tells how many rows were deleted
+        return result.rowcount > 0

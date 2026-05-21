@@ -21,5 +21,17 @@ async def create_jobs(
 
 
 @routes.get("/all")
-async def get_all_jobs():
-    return [value for _, value in jobs.items()]
+async def get_all_jobs(
+    user = Depends(get_current_user),
+    db = Depends(get_db)
+):
+    return await JobListingService(user=user).get_all_jobs_by_user(db=db)
+
+
+@routes.delete("/{id}")
+async def delete_job(
+    id:str,
+    user = Depends(get_current_user),
+    db = Depends(get_db)
+):
+    return "success" if 0 != await JobListingService(user=user).delete_job(id=id, db=db) else "failed"
