@@ -1,6 +1,6 @@
-# Job Aggregator Platform
+# HiringLens (A Smart Job Aggregator Platform)
 
-A scalable, data-driven Job Aggregator platform that collects, processes, and normalizes job listings from multiple sources (Naukri, Instahyre, Company career pages, and user-submitted links). The platform leverages a decoupled Medallion Architecture via PySpark to clean data and provides real-time dashboard analytics on market trends, tech stack demands, and geographic hiring opportunities.
+HiringLens, a scalable, data-driven Job Aggregator platform that collects, processes, and normalizes job listings from multiple sources (Naukri, Instahyre, Company career pages, and user-submitted links). The platform leverages a decoupled Medallion Architecture via PySpark to clean data and provides real-time dashboard analytics on market trends, tech stack demands, and geographic hiring opportunities.
 
 ---
 
@@ -10,7 +10,7 @@ To ensure high performance and prevent database starvation on the production ins
 
 ```
 [ Ingestion Layer ]        [ Storage & Processing ]       [ Production Layer ]
- ├── Scrapers (Cron)  ───>  AWS S3 (Bronze Bucket)         
+ ├── Scrapers (Cron)  ───>  AWS S3/MinIO (Bronze Bucket)         
  └── User Links              │                             
                              ▼                             
                         PySpark (Silver ETL)               
@@ -48,7 +48,7 @@ Tracks authenticated platform users (job seekers or recruiters).
 Stores targets for the web scrapers. Tracks custom career pages or portal tracks.
 
 * `id` (PK, integer)
-* `name` (varchar) - e.g., "Tata 1mg"
+* `name` (varchar) - e.g., "Google"
 * `url` (text) - Base URL to scrape.
 * `type` (varchar) - e.g., `career_page`, `naukri`, `wellfound`.
 * `added_by_user_id` (FK -> `users.id`, Nullable) - Links back if a user requested tracking.
@@ -89,6 +89,7 @@ Junction table resolving the Many-to-Many relationship between jobs and skills.
 ## 🛠️ Tech Stack
 
 * **Backend:** FastAPI (Python 3.12+)
+* **Scrapping:** HTTPX, BeautifulSoup, Playwright
 * **Data Processing:** PySpark
 * **Database:** PostgreSQL
 * **Storage:** AWS S3 / MinIO (Object Storage)
@@ -151,7 +152,6 @@ alembic upgrade head
 spark-submit --packages org.postgresql:postgresql:42.7.2 scripts/spark_silver_transform.py
 
 ```
-
 
 
 ---
