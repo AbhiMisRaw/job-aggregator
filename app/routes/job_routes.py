@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends
+from sqlalchemy.ext.asyncio import AsyncSession
 from app.schema import JobCreationSchema, JobListingSchema
 from app.utils.security import get_current_user
 from app.db import get_db
@@ -13,7 +14,7 @@ routes = APIRouter(
 async def create_jobs(
     _body: JobCreationSchema,
     user = Depends(get_current_user),
-    db = Depends(get_db)
+    db: AsyncSession = Depends(get_db)
 ):
     service = JobListingService(user)
     job = await service.create_job(_body, db=db)
@@ -23,7 +24,7 @@ async def create_jobs(
 @routes.get("/all")
 async def get_all_jobs(
     user = Depends(get_current_user),
-    db = Depends(get_db)
+    db: AsyncSession = Depends(get_db)
 ):
     return await JobListingService(user=user).get_all_jobs_by_user(db=db)
 
@@ -32,6 +33,6 @@ async def get_all_jobs(
 async def delete_job(
     id:str,
     user = Depends(get_current_user),
-    db = Depends(get_db)
+    db: AsyncSession = Depends(get_db)
 ):
     return "success" if 0 != await JobListingService(user=user).delete_job(id=id, db=db) else "failed"

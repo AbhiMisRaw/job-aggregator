@@ -1,14 +1,13 @@
-
-
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models import (
-    CompanyCareerPage,
+    CompanyCareerPage as CompanyModel,
     Platform,
 )
 from app.schema import (
     CompanyCareerPage,
+    CompanyCareerPageCreate
 )
 
 
@@ -19,11 +18,11 @@ class CompanyCareerPageService:
         db: AsyncSession,
         platform: Platform | None = None,
     ):
-        query = select(CompanyCareerPage)
+        query = select(CompanyModel)
 
         if platform:
             query = query.where(
-                CompanyCareerPage.platform == platform
+                CompanyModel.platform == platform
             )
 
         result = await db.execute(query)
@@ -32,13 +31,15 @@ class CompanyCareerPageService:
 
     @staticmethod
     async def create_company(
-        db: AsyncSession,
         payload: CompanyCareerPageCreate,
+        db: AsyncSession,
+        user = None,
     ):
-        company = CompanyCareerPage(
+        company = CompanyModel(
             company_name=payload.company_name,
             platform=payload.platform,
-            active=payload.active,
+            active=True,
+            company_url=payload.career_page_url
         )
 
         db.add(company)

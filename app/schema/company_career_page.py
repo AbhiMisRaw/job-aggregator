@@ -1,10 +1,12 @@
-from pydantic import BaseModel
 from datetime import datetime
+from pydantic import BaseModel
+
+from sqlalchemy.ext.asyncio import AsyncSession
 from app.models import Platform
 
 
 class CompanyCareerPageCreate(BaseModel):
-    comapny_name: str
+    company_name: str
     career_page_url: str
     platform: Platform
 

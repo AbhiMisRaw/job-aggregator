@@ -33,7 +33,7 @@ async def get_all_user(db: AsyncSession):
     return result if result else list()
 
 
-async def get_user_by_email(email, db):
+async def get_user_by_email(email: str, db: AsyncSession):
     stmt = select(User).where(User.email == email)
     result = await db.execute(stmt)
     user = result.scalars().first()
