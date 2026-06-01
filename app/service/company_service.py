@@ -17,13 +17,19 @@ class CompanyCareerPageService:
     async def get_all_companies(
         db: AsyncSession,
         platform: Platform | None = None,
+        limit: int = 20,
+        last_id: int | None = None
     ):
-        query = select(CompanyModel)
+        query = select(CompanyModel).order_by(CompanyModel.id.asc()).limit(limit)
 
         if platform:
             query = query.where(
                 CompanyModel.platform == platform
             )
+    
+        if last_id:
+            # Postgres uses index scan directly, bypassing offsets completely
+            query = query.where(CompanyModel.id > last_id)
 
         result = await db.execute(query)
 
