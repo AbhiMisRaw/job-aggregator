@@ -39,6 +39,7 @@ class CompanyCareerPage(Base):
     platform: Mapped[Platform] = mapped_column(
         SqlEnum(Platform),
         nullable=False,
+        index=True,
     )
 
     active: Mapped[bool] = mapped_column(
