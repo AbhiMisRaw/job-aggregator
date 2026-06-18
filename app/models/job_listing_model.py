@@ -2,9 +2,13 @@
 import uuid
 from datetime import datetime
 from sqlalchemy import ForeignKey
-from sqlalchemy import String, Integer, Boolean, DateTime, UUID
+from sqlalchemy import String, UUID
 from sqlalchemy.sql import func
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import (
+    Mapped,
+    mapped_column,
+    relationship
+    )
 from .base import Base
 
 class JobListing(Base):
@@ -21,7 +25,10 @@ class JobListing(Base):
     )
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
     created_at: Mapped[datetime] = mapped_column(default=func.now())
-    updated_at: Mapped[datetime] = mapped_column(default=func.now(), onupdate=func.now())
+    updated_at: Mapped[datetime] = mapped_column(
+        default=func.now(),
+        onupdate=func.now()
+        )
 
     # relationship
     user: Mapped["User"] = relationship(

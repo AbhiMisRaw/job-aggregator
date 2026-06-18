@@ -2,8 +2,17 @@
 from datetime import datetime
 from typing import List
 
-from sqlalchemy import String, Integer, Boolean, DateTime
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy import (
+    String,
+    Integer,
+    Boolean,
+    DateTime
+    )
+from sqlalchemy.orm import (
+    Mapped,
+    mapped_column,
+    relationship
+    )
 from sqlalchemy.sql import func
 
 from .base import Base

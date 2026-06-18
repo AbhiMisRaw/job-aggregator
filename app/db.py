@@ -1,6 +1,9 @@
 import os
 from dotenv import load_dotenv
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
+from sqlalchemy.ext.asyncio import (
+    create_async_engine,
+    async_sessionmaker
+    )
 
 load_dotenv()
 
@@ -43,5 +46,5 @@ async def get_db():
         try:
             yield session
         except Exception:
-            await session.rollback()  # 🔥 rollback on error
+            await session.rollback()
             raise
