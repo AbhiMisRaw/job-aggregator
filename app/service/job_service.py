@@ -4,13 +4,19 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import delete
 from sqlalchemy.exc import NoResultFound
 
+from app.schema import JobCreationSchema
+
 class JobListingService():
     
     def __init__(self, user):
         self.user = user
 
-    async def create_job(self, _body, db: AsyncSession):
-        job = JobListing(link=_body.link_to_job,user_id=self.user.id)
+    async def create_job(self, _body: JobCreationSchema, db: AsyncSession):
+        job = JobListing(
+            link=_body.job_link,
+            company_name=_body.company_name,
+            user_id=self.user.id
+        )
         db.add(job)
         await db.commit()
         await db.refresh(job)
@@ -35,3 +41,4 @@ class JobListingService():
 
         # result.rowcount tells how many rows were deleted
         return result.rowcount > 0
+    
