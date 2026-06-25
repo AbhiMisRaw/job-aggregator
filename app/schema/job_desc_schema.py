@@ -7,21 +7,23 @@ class JobDescriptionBaseSchema(BaseModel):
     location: str
     min_exp: float
     max_exp: float
-    employement_type: float
+    employement_type: str
 
 
 class JobDescriptionList(JobDescriptionBaseSchema):
     pass
 
 
-class JobDescriptionCreateRequest(JobDescriptionBaseSchema):
+
+class JobDescriptionDetailsSchema(JobDescriptionBaseSchema):
     content: str
     min_salary: float
     max_salary: float
     remote_type: str
+    job_link: str
     skills: List[str]
 
 
-class JobDescriptionDetailsSchema(JobDescriptionCreateRequest):
-    job_link: str
+class JobDescriptionCreateRequest(JobDescriptionDetailsSchema):
+    company: str
     

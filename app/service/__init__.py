@@ -1,2 +1,3 @@
 from .job_service import JobListingService
 from .company_service import CompanyCareerPageService
+from .job_desc_service import JobDescriptionService

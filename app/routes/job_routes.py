@@ -35,4 +35,7 @@ async def delete_job(
     user = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-    return "success" if 0 != await JobListingService(user=user).delete_job(id=id, db=db) else "failed"
+    return "success" if 0 != (
+        await JobListingService(user=user)
+        .delete_job(id=id, db=db)
+        ) else "failed"

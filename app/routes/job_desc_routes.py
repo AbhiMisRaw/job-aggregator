@@ -8,7 +8,7 @@ from app.schema import (
 )
 from app.db import get_db
 from app.utils.security import get_current_user
-
+from app.service import JobDescriptionService
 
 router = APIRouter("/scrapped/job",tags=["Jobs"])
 
@@ -26,7 +26,7 @@ async def create_job(
     user = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-    pass
+    return await JobDescriptionService(user, db).create_job_desc(payload)
 
 
 @router.post("/{job_id}")
