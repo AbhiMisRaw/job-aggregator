@@ -32,13 +32,18 @@ class JobDescription(Base):
     job_link_id: Mapped[int] = mapped_column(
         ForeignKey("job_listings.id"),
         unique=True,
+        nullable=False
     )
 
     job_link: Mapped["JobListing"] = relationship(
         back_populates="job_description"
     )
-    skills: Mapped["Skill"] = relationship(
-        secondary="job_skills",
-        back_populates="jobs"
-    )
+    # skills: Mapped[list["JobSkill"]] = relationship(
+    #     back_populates="job",
+    #     cascade="all, delete-orphan"
+    # )
+    job_skills: Mapped[list["JobSkill"]] = relationship(
+    back_populates="job",
+    cascade="all, delete-orphan"
+)
 

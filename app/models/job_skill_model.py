@@ -25,3 +25,8 @@ class JobSkill(Base):
     skill: Mapped["Skill"] = relationship(
         back_populates="job_skills"
     )
+
+    # job_skills: Mapped[list["JobSkill"]] = relationship(
+    #     back_populates="job",
+    #     cascade="all, delete-orphan"
+    # )

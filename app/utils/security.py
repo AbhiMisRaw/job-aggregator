@@ -18,6 +18,10 @@ SECRET_KEY = os.getenv("SECRET_KEY", "super-secret-key")
 ALGORITHM = os.getenv("ALGORITHM", "HS256")
 ACCESS_TOKEN_EXP_MIN = os.getenv("ACCESS_TOKEN_EXP_MIN", 15)
 
+SCRAPPER_TOKEN = os.getenv("SCRAPPER_TOKEN","scrapper_token")
+SCRAPPER_TOKEN_IDENTITY = os.getenv("SCRAPPER_TOKEN_IDENTITY","scrapper")
+SCRAPPER_EMAIL = os.getenv("SCRAPPER_MAIL","scrapper@admin.com")
+
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth_scheme = HTTPBearer()
 
@@ -50,9 +54,11 @@ async def get_current_user(
     )
     try:
         token = creds.credentials
-        print("TOKEN :", token)
+        if token == SCRAPPER_TOKEN and SCRAPPER_TOKEN.startswith(SCRAPPER_TOKEN_IDENTITY):
+            user = await handle_scrapper_user(db)
+            return user
+        
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        print(payload)
         id = payload.get("id")
         if id is None:
             raise credential_exp
@@ -60,7 +66,6 @@ async def get_current_user(
         raise credential_exp
     
     user = await get_user_by_id(id=id, db=db)
-    print(user)
     if user is None:
         raise credential_exp
     return user
@@ -70,3 +75,22 @@ async def get_user_by_id(id, db):
     result = await db.execute(stmt)
     user = result.scalars().first()
     return user
+
+
+async def handle_scrapper_user(db):
+    # return Scrapper Service User
+            stmt = Select(User).where(User.email == SCRAPPER_EMAIL)
+            result = await db.execute(stmt)
+            user = result.scalars().first()
+            if user is None:
+                user = User(
+                    full_name="Scrapper",
+                    email=SCRAPPER_EMAIL,
+                    password="password",
+                )
+                db.add(user)
+                await db.flush()
+                # Missing:
+                await db.commit()
+                
+            return user

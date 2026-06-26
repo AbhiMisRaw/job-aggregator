@@ -23,8 +23,6 @@ class Skill(Base):
         String(50),
         index=True
     )
-    jobs = relationship(
-        "JobDescription",
-        secondary="job_skills",
-        back_populates="skills"
+    job_skills: Mapped[list["JobSkill"]] = relationship(
+        back_populates="skill"
     )
