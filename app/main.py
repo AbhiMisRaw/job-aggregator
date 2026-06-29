@@ -8,6 +8,7 @@ from .routes import (
     user_routes,
     health_routes,
     career_page_routes,
+    job_desc_routes
 )
 from .db import engine
 
@@ -37,4 +38,5 @@ app.include_router(health_routes)
 app.include_router(job_routes)
 app.include_router(user_routes)
 app.include_router(career_page_routes)
+app.include_router(job_desc_routes)
 

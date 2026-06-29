@@ -42,10 +42,10 @@ class JobDescriptionService():
 
         # 3. create skills relation
         payload.skills = [ skill.lower() for skill in payload.skills]
-        for skill_name in payload.skills:
-            skill = await self._get_or_create_skill(
-                skill_name
-            )
+        skills = await self._get_or_create_skills(
+            payload.skills
+        )
+        for skill in skills:
             job_skill = JobSkill(
                 job=job_description,
                 skill=skill

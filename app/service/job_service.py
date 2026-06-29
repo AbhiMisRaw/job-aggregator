@@ -42,3 +42,9 @@ class JobListingService():
         # result.rowcount tells how many rows were deleted
         return result.rowcount > 0
     
+
+    async def get_jobs_by_company(self, company, db: AsyncSession):
+        query = Select(JobListing).where(JobListing.company_name == company)
+        result = await db.execute(query)
+        result = result.scalars().all()
+        return result if result else list()
