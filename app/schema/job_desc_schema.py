@@ -11,7 +11,7 @@ class JobDescriptionBaseSchema(BaseModel):
 
 
 class JobDescriptionList(JobDescriptionBaseSchema):
-    pass
+    skills: List[str]
 
 
 

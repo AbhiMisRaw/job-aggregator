@@ -1,18 +1,62 @@
+from typing import Optional
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
+from sqlalchemy.orm import selectinload
 from app.schema import (
     JobDescriptionCreateRequest,
-    JobDescriptionList,
-    JobDescriptionDetailsSchema
 )
 from .job_service import JobListingService
-from app.models import JobListing, JobDescription, JobSkill, Skill
+from app.models import (
+    JobListing,
+    JobDescription,
+    JobSkill,
+    Skill
+    )
+from app.schema import JobDescriptionList
 
 class JobDescriptionService():
 
     def __init__(self, user, db):
         self.user = user
         self.db = db
+
+
+    
+    async def get_job_listings(
+        self,
+        filters: Optional[dict]
+    ):
+        query = (
+            select(JobDescription)
+            .options(
+                selectinload(JobDescription.job_skills)
+                .selectinload(JobSkill.skill)
+            )
+        )
+
+        result = await self.db.execute(query)
+        jobs = result.scalars().all()
+
+        return [
+            self.convert_to_schema(job)
+            for job in jobs
+        ]
+
+
+    def convert_to_schema(self, job):
+        """
+        Helper function to convert data objects to JobDescriptionList Schema.
+        """
+        skills = [skill.skill.name for skill in job.job_skills]
+
+        return JobDescriptionList(
+            title=job.title,
+            location=job.location,
+            min_exp=job.min_experience,
+            max_exp=job.max_experience,
+            employement_type=job.employment_type,
+            skills=skills,
+        )
 
     async def create_job_desc(
         self,

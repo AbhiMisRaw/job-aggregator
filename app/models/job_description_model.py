@@ -38,12 +38,10 @@ class JobDescription(Base):
     job_link: Mapped["JobListing"] = relationship(
         back_populates="job_description"
     )
-    # skills: Mapped[list["JobSkill"]] = relationship(
-    #     back_populates="job",
-    #     cascade="all, delete-orphan"
-    # )
+    
     job_skills: Mapped[list["JobSkill"]] = relationship(
     back_populates="job",
-    cascade="all, delete-orphan"
+    cascade="all, delete-orphan",
+    lazy="selectin",
 )
 

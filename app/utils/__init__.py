@@ -1,4 +1,8 @@
-from .security import hash_password, create_access_token, verify_password
+from .security import (
+    hash_password,
+    create_access_token,
+    verify_password
+    )
 from .pagination import Params
 
 __all__ = [
